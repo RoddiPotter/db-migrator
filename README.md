@@ -13,9 +13,9 @@ To use:
 
 Migration scripts are named so that the database 'version' is specified in the first few characters.  It doesn't matter what the format of this prefix is, so long as the filename starts with a number.  The versions of the database increment or decrement according to the numbers specified in the list of filenames in the migrations directory, for example:
 
-001-create_tables.sql
-002-create_users.sql
-005-add_password_field.sql
+* 001-create_tables.sql
+* 002-create_users.sql
+* 005-add_password_field.sql
 
 The database versions would be 1, 2, and 5 respectively.
 <br/>
@@ -25,8 +25,8 @@ The migration scripts contain two sections:
 <br/>
 For example:
 
-<code>
-@UP
+<pre>
+@UP@
 create table meeting_reminder (
         id serial primary key,
         event_id integer not null,              -- the meeting this reminder is for
@@ -42,24 +42,25 @@ alter table meeting_reminder add constraint fk_meeting_reminder_event foreign ke
 @DOWN
 drop table meeting_reminder;
 @DOWN
-</code>
+</pre>
 
 To run db-migrator, change into the database directory where migrator.xml is located and run
-
+<code>
 ant -f migrator.xml init  
+</code>
 
 This will create a table in the database called db_version, which contains one column called version and will only ever contain a single row, initialized to 0.
-
+<code>
 ant -f migrator.xml upgrade
-
+</code>
 Will read the version from the db-version table and search the migrations directory for the next highest number and run the sql in the @UP@.  It will then increment the db-version.version to the number specified in the migration script name.  If the upgrade failed, the version will remain the same (see H2 databse note below).
-
+<code>
 ant -f migrator.xml rollback
-
+</code>
 will read the version from the db-version table and search the migrations directory for the same number and run the sql in the @DOWN@.  If will then decrement the db-version.version to the number specified in the next lowest migration script name.  If the downgrade failed, the version will remain the same (see H2 database note below).
-
+<code>
 ant -f migrator.xml upgrade-all
-
+</code>
 Is a shortcut for running all scripts from the current version to the highest number specified in the migrations directory.
 
 If things go wrong, you can always run the script sql manually and manually update the db-version.version value to the appropriate number.  The system is designed to be non-intelligent in this regard.
