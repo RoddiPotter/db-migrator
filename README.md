@@ -19,9 +19,9 @@ Migration scripts are named so that the database 'version' is specified in the f
 * 005-add_password_field.sql
 <br/>
 The database versions would be 1, 2, and 5 respectively.
-<br/>
+
 ## Migration Scripts
-<br/>
+
 The migration scripts contain two sections: 
 <br/>
 1. @UP@ which defines the standard sql to upgrade the database to this version
