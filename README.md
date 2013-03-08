@@ -17,9 +17,11 @@ Migration scripts are named so that the database 'version' is specified in the f
 * 002-create_users.sql
 * 005-add_password_field.sql
 <br/>
+<br/>
 The database versions would be 1, 2, and 5 respectively.
 <br/>
 The migration scripts contain two sections: 
+<br/>
 1. @UP@ which defines the standard sql to upgrade the database to this version
 2. @DOWN@ which defines to rollback sql to downgrade to the previous version
 <br/>
