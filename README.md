@@ -1,5 +1,4 @@
-db-migrator
-===========
+#db-migrator
 
 db-migrator is an Apache Ant based database versioning tool influenced by Ruby on Rails Migrations project.
 <br/>
@@ -11,14 +10,17 @@ To use:
 4. Update migrator.properties to specify the jdbc parameters to connect to your database
 5. Create migration scripts
 <br/>
+#Migrations Directory
+<br/>
 Migration scripts are named so that the database 'version' is specified in the first few characters.  It doesn't matter what the format of this prefix is, so long as the filename starts with a number.  The versions of the database increment or decrement according to the numbers specified in the list of filenames in the migrations directory, for example:
 <br/>
 * 001-create_tables.sql
 * 002-create_users.sql
 * 005-add_password_field.sql
 <br/>
-<br/>
 The database versions would be 1, 2, and 5 respectively.
+<br/>
+##Migration Scripts
 <br/>
 The migration scripts contain two sections: 
 <br/>
@@ -45,6 +47,7 @@ alter table meeting_reminder add constraint fk_meeting_reminder_event foreign ke
 drop table meeting_reminder;
 @DOWN
 </pre>
+##Usage
 <br/>
 To run db-migrator, change into the database directory where migrator.xml is located and run
 <br/>
