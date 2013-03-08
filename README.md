@@ -1,10 +1,10 @@
 # db-migrator
 
-db-migrator is an Apache Ant based database versioning tool influenced by Ruby on Rails Migrations project.
+db-migrator is an Apache Ant based database versioning tool influenced by Ruby on Rails Migrations project.  db-migrator is released under the Apache 2 license.
 
-To use:
+Getting started:
 
-1. Download the binary version of db-migrator
+1. Download the binary version of db-migrator (sorry, not available just yet)
 2. Create a directory near your project called "database"
 3. Add your jdbc driver for your database to the database directory
 4. Update migrator.properties to specify the jdbc parameters to connect to your database
