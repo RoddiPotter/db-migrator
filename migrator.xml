@@ -1,0 +1,50 @@
+<project name="Database Migrator" default="init">
+
+    <property file="migrator.properties"/>
+    	
+    <taskdef name="migrator" classname="com.coderod.db.migrations.ant.MigratorTask">
+    	<classpath>
+			<pathelement location="${db-migrator.jar}"/>
+    		<pathelement location="${db.driver.jar.is}"/>
+    	</classpath>
+    </taskdef>
+
+    <target name="init">
+        <mkdir dir="${migration.scripts.are.in}"/>
+        <migrator user="${db.username}"
+                  password="${db.password}"
+                  url="${db.url}"
+                  driver="${db.driver}"
+                  scriptsLocation="${migration.scripts.are.in}"
+                  action="init"/>
+    </target>
+
+    <target name="upgrade-all">
+        <migrator user="${db.username}"
+                        password="${db.password}"
+                        url="${db.url}"
+                        driver="${db.driver}"
+                        scriptsLocation="${migration.scripts.are.in}"
+        				action="upgrade-all"/>
+    </target>
+
+    <target name="upgrade">
+        <migrator user="${db.username}"
+                        password="${db.password}"
+                        url="${db.url}"
+                        driver="${db.driver}"
+                        scriptsLocation="${migration.scripts.are.in}"
+        				action="upgrade"/>
+    </target>
+
+    <target name="rollback">
+        <migrator user="${db.username}"
+                  password="${db.password}"
+                  url="${db.url}"
+                  driver="${db.driver}"
+                  scriptsLocation="${migration.scripts.are.in}" 
+                  action="rollback"/>
+    </target>
+
+
+</project>
