@@ -64,13 +64,13 @@ This will create a table in the database called db_version, which contains one c
 ant -f migrator.xml upgrade
 </code>
 
-Will read the version from the db-version table and search the migrations directory for the next highest number and run the sql in the @UP@.  It will then increment the db-version.version to the number specified in the migration script name.  If the upgrade failed, the version will remain the same (see H2 databse note below).
+Will read the version from the db-version table and search the migrations directory for the next highest number and run the sql in the @UP.  It will then increment the db-version.version to the number specified in the migration script name.  If the upgrade failed, the version will remain the same (see H2 databse note below).
 
 <code>
 ant -f migrator.xml rollback
 </code>
 
-will read the version from the db-version table and search the migrations directory for the same number and run the sql in the @DOWN@.  If will then decrement the db-version.version to the number specified in the next lowest migration script name.  If the downgrade failed, the version will remain the same (see H2 database note below).
+will read the version from the db-version table and search the migrations directory for the same number and run the sql in the @DOWN.  If will then decrement the db-version.version to the number specified in the next lowest migration script name.  If the downgrade failed, the version will remain the same (see H2 database note below).
 
 <code>
 ant -f migrator.xml upgrade-all
