@@ -24,14 +24,14 @@ The database versions would be 1, 2, and 5 respectively.
 
 The migration scripts contain two sections: 
 
-1. @UP@ which defines the standard sql to upgrade the database to this version
-2. @DOWN@ which defines to rollback sql to downgrade to the previous version
+1. @UP which defines the standard sql to upgrade the database to this version
+2. @DOWN which defines to rollback sql to downgrade to the previous version
 
 For example:
 
 <pre>
 <code>
-@UP@
+@UP
 create table meeting_reminder (
         id serial primary key,
         event_id integer not null,              -- the meeting this reminder is for
