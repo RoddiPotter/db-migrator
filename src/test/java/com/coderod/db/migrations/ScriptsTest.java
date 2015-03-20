@@ -19,8 +19,7 @@ package com.coderod.db.migrations;
 import java.io.File;
 import java.util.Arrays;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.coderod.db.migrations.api.Script;

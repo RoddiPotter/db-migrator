@@ -31,7 +31,8 @@ public class Migrator extends DatabaseImpl {
 	private final ScriptsDir scripts;
 	private final DbVersion dbVersion;
 
-	public Migrator(String url, String driver, String user, String password, String scriptsDir) {
+	public Migrator(String url, String driver, String user, String password,
+			String scriptsDir) {
 
 		super(user, password, url, driver);
 
@@ -60,16 +61,16 @@ public class Migrator extends DatabaseImpl {
 		if (dbVersion.exists()) {
 
 			Script script = scripts.next(dbVersion.currentVersion());
-			String allUpSql = script.getUpSql();
+			String upSql = script.getUpSql();
 
 			if (script != null) {
 
-				String[] upSql = null;
+				String[] statments = null;
 
-				if (allUpSql != null) {
-					upSql = allUpSql.split(";\\r");
+				if (upSql != null) {
+					statments = upSql.split(";");
 				} else {
-					upSql = new String[0];
+					statments = new String[0];
 				}
 
 				Connection conn = null;
@@ -78,28 +79,32 @@ public class Migrator extends DatabaseImpl {
 					conn = getConnection();
 
 					conn.setAutoCommit(false);
-					if (upSql != null && upSql.length > 0) {
-						System.out.println("upgrading to version " + script.version()
-								+ " :::::::: " + new_line);
-						for (String sql : upSql) {
-							sql = sql.replaceAll(";$", "");
-							System.out.println("applying statement : " + sql);
-							conn.createStatement().executeUpdate(sql);
+					if (statments != null && statments.length > 0) {
+						System.out.println("upgrading dbversion from "
+								+ dbVersion.currentVersion() + " to "
+								+ script.version() + ":");
+
+						System.out
+								.println("----------------------@UP----------------------------");
+						for (String statement : statments) {
+
+							statement = statement.replaceAll("$\n", "");
+							System.out.print("" + statement + ";");
+							conn.createStatement().executeUpdate(statement);
+							System.out.println(" \u2714");
 						}
+						System.out
+								.println("----------------------@UP----------------------------");
 
 					}
 					dbVersion.update(script.version());
 					conn.commit();
-					System.out.println("migration succeeded, version is now " + script.version()
-							+ " :::::::: " + new_line);
+					System.out.println("succeeded, now at " + script.version());
 					return true;
 
 				} catch (SQLException e) {
-					System.err.println("migrate failed: "
-							+ e.getMessage()
-							+ (e.getNextException() != null ? ", "
-									+ e.getNextException().getMessage() : ""));
-					e.printStackTrace();
+					System.out.print(" \u2718 \u2775 ");
+					System.out.println(e.getMessage());
 					try {
 						conn.rollback();
 					} catch (SQLException e1) {
@@ -128,25 +133,48 @@ public class Migrator extends DatabaseImpl {
 
 					conn = getConnection();
 					conn.setAutoCommit(false);
-					String downSql = script.getDownSql();
-					if (downSql != null && downSql.length() > 0) {
-						System.out.println("downgrading to version " + script.version()
-								+ " :::::::: " + new_line + downSql);
-						conn.createStatement().executeUpdate(downSql);
+					String allDownSql = script.getDownSql();
+
+					String[] statements;
+
+					if (allDownSql != null) {
+						statements = allDownSql.split(";");
+					} else {
+						statements = new String[0];
+					}
+
+					if (statements.length > 0) {
+						System.out.println("downgrading dbversion from "
+								+ dbVersion.currentVersion() + " to "
+								+ script.version());
+
+						System.out
+								.println("---------------------@DOWN-----------------------------");
+						for (String statement : statements) {
+							System.out.print(statement + ";");
+							conn.createStatement().executeUpdate(statement);
+							System.out.println(" \u2714");
+						}
+						System.out
+								.println("---------------------@DOWN----------------------------------");
+
 					}
 					// now roll back to previous script number, checking to make
 					// sure we're not at the first script
-					Script previousScript = scripts.previous(dbVersion.currentVersion());
+					Script previousScript = scripts.previous(dbVersion
+							.currentVersion());
 					if (previousScript != null) {
 						dbVersion.update(previousScript.version());
 					} else {
 						dbVersion.update(0);
 					}
 					conn.commit();
+					System.out.println("succeeded, now at " + script.version());
 					return true;
 
 				} catch (SQLException e) {
-					System.err.println("migrate failed: " + e.getMessage());
+					System.out.print(" \u2718 \u2775 ");
+					System.out.println(e.getMessage());
 					try {
 						conn.rollback();
 					} catch (SQLException e1) {
@@ -164,14 +192,16 @@ public class Migrator extends DatabaseImpl {
 
 	public String printBeforeDiagnostics() {
 		StringWriter writer = new StringWriter();
-		writer.write("Script dir: " + this.scripts.dir().getAbsolutePath() + new_line);
+		writer.write("Script dir: " + this.scripts.dir().getAbsolutePath()
+				+ new_line);
 		for (Script script : this.scripts.listScripts()) {
-			writer.write("Found script: " + script.scriptFile().getName() + "(version: "
-					+ script.version() + ")" + new_line);
+			writer.write("Found script: " + script.scriptFile().getName()
+					+ "(version: " + script.version() + ")" + new_line);
 		}
 		if (dbVersion.exists()) {
 			writer.write("Data versioning is initialized." + new_line);
-			writer.write("Database version is at " + dbVersion.currentVersion() + new_line);
+			writer.write("Database version is at " + dbVersion.currentVersion()
+					+ new_line);
 		} else {
 			writer.write("Data versioning is not initialized" + new_line);
 		}
@@ -182,7 +212,8 @@ public class Migrator extends DatabaseImpl {
 		StringWriter writer = new StringWriter();
 		String new_line = System.getProperty("line.separator");
 		if (dbVersion.exists()) {
-			writer.write("Database version is now at " + dbVersion.currentVersion() + new_line);
+			writer.write("Database version is "
+					+ dbVersion.currentVersion() + new_line);
 		} else {
 			writer.write("Data versioning is not yet initialized" + new_line);
 		}

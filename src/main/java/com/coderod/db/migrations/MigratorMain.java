@@ -53,22 +53,26 @@ public class MigratorMain {
 			if (action.equals("upgrade")) {
 				System.out.println("upgrade action started");
 				migrator.migrateUp();
-				System.out.println("upgrade action ended");
+				System.out.println("\nupgrade action ended");
 			} else if (action.equals("upgrade-all")) {
 				System.out.println("upgrade-all action started");
 				migrator.migrateUpAll();
-				System.out.println("upgrade-all action ended");
+				System.out.println("\nupgrade-all action ended");
 			} else if (action.equals("rollback")) {
 				System.out.println("rollback action started");
 				migrator.migrateDown();
-				System.out.println("rollback action ended");
+				System.out.println("\nrollback action ended");
 			} else if (action.equals("init")) {
 				System.out.println("init action started");
 				migrator.initDb();
-				System.out.println("init action ended");
+				System.out.println("\ninit action ended");
+			} else if (action.equals("status")) {
+				System.out.println("status action started");
+				migrator.printAfterDiagnostics();
+				System.out.println("\nstatus action ended");
 			} else {
 				throw new IllegalArgumentException("don't kow what " + action
-						+ " is.  Must be one of: upgrade-all upgrade rollback init");
+						+ " is.  Must be one of: upgrade-all upgrade rollback init status");
 			}
 
 		}

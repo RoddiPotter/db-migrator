@@ -34,6 +34,7 @@ public class MigratorTask extends Task {
 	public static final String UPGRADE = "upgrade";
 	public static final String ROLLBACK = "rollback";
 	public static final String INIT = "init";
+	public static final String STATUS = "status";
 
 	public void setUser(String user) {
 		this.user = user;
@@ -80,10 +81,14 @@ public class MigratorTask extends Task {
 				log(INIT + " action started");
 				migrator.initDb();
 				log(INIT + " action ended");
+			} else if (action.equals(STATUS)) {
+				log(STATUS + " action started");
+				migrator.printAfterDiagnostics();
+				log(STATUS + " action ended");
 			} else {
 				throw new BuildException("don't kow what " + action
 						+ " is.  Must be one of:" + UPGRADE_ALL + " " + UPGRADE + " "
-						+ ROLLBACK + " " + INIT);
+						+ ROLLBACK + " " + INIT + " " + STATUS);
 			}
 
 			log(migrator.printAfterDiagnostics());

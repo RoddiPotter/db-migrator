@@ -5,7 +5,7 @@
     <taskdef name="migrator" classname="com.coderod.db.migrations.ant.MigratorTask">
     	<classpath>
 			<pathelement location="${db-migrator.jar}"/>
-    		<pathelement location="${db.driver.jar.is}"/>
+    		<pathelement location="${db.driver.jar}"/>
     	</classpath>
     </taskdef>
 
@@ -15,7 +15,7 @@
                   password="${db.password}"
                   url="${db.url}"
                   driver="${db.driver}"
-                  scriptsLocation="${migration.scripts.are.in}"
+                  scriptsLocation="${migration.scripts}"
                   action="init"/>
     </target>
 
@@ -24,7 +24,7 @@
                         password="${db.password}"
                         url="${db.url}"
                         driver="${db.driver}"
-                        scriptsLocation="${migration.scripts.are.in}"
+                        scriptsLocation="${migration.scripts}"
         				action="upgrade-all"/>
     </target>
 
@@ -33,7 +33,7 @@
                         password="${db.password}"
                         url="${db.url}"
                         driver="${db.driver}"
-                        scriptsLocation="${migration.scripts.are.in}"
+                        scriptsLocation="${migration.scripts}"
         				action="upgrade"/>
     </target>
 
@@ -46,5 +46,13 @@
                   action="rollback"/>
     </target>
 
+    <target name="status">
+        <migrator user="${db.username}"
+                  password="${db.password}"
+                  url="${db.url}"
+                  driver="${db.driver}"
+                  scriptsLocation="${migration.scripts.are.in}" 
+                  action="status"/>
+    </target>
 
 </project>

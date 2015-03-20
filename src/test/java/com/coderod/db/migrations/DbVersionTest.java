@@ -16,11 +16,9 @@
  */
 package com.coderod.db.migrations;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
-import com.coderod.db.migrations.DbVersionImpl;
 import com.coderod.db.migrations.api.DbVersion;
 
 public class DbVersionTest {

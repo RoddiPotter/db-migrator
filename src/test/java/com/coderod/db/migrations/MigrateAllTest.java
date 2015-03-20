@@ -21,12 +21,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.coderod.db.migrations.Migrator;
 
 public class MigrateAllTest {
 
