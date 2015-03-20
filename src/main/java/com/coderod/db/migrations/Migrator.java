@@ -65,12 +65,10 @@ public class Migrator extends DatabaseImpl {
 
 			if (script != null) {
 
-				String[] statments = null;
+				String[] statements = new String[0];
 
 				if (upSql != null) {
-					statments = upSql.split(";");
-				} else {
-					statments = new String[0];
+					statements = upSql.split(";");
 				}
 
 				Connection conn = null;
@@ -79,19 +77,25 @@ public class Migrator extends DatabaseImpl {
 					conn = getConnection();
 
 					conn.setAutoCommit(false);
-					if (statments != null && statments.length > 0) {
+					if (statements != null && statements.length > 0) {
 						System.out.println("upgrading dbversion from "
 								+ dbVersion.currentVersion() + " to "
 								+ script.version() + ":");
 
 						System.out
 								.println("----------------------@UP----------------------------");
-						for (String statement : statments) {
+						int i = 0;
+						for (String statement : statements) {
 
-							statement = statement.replaceAll("$\n", "");
-							System.out.print("" + statement + ";");
+							statement = statement.trim();
+							if(statement == null || statement.length() == 0) {
+								continue;
+							}
+							statement = statement.replaceAll("$\n|$\n\r|$\r|^\n|^\n\r|^\r|", "");
+							System.out.print("(" + i + ")   " + statement.replaceAll("\n", "\n      ") + ";");
 							conn.createStatement().executeUpdate(statement);
 							System.out.println(" \u2714");
+							i++;
 						}
 						System.out
 								.println("----------------------@UP----------------------------");
@@ -135,12 +139,10 @@ public class Migrator extends DatabaseImpl {
 					conn.setAutoCommit(false);
 					String allDownSql = script.getDownSql();
 
-					String[] statements;
+					String[] statements = new String[0];
 
 					if (allDownSql != null) {
 						statements = allDownSql.split(";");
-					} else {
-						statements = new String[0];
 					}
 
 					if (statements.length > 0) {
@@ -150,10 +152,18 @@ public class Migrator extends DatabaseImpl {
 
 						System.out
 								.println("---------------------@DOWN-----------------------------");
+						int i = 0;
 						for (String statement : statements) {
-							System.out.print(statement + ";");
+
+							statement = statement.trim();
+							if(statement == null || statement.length() == 0) {
+								continue;
+							}
+							statement = statement.replaceAll("$\n|$\n\r|$\r|^\n|^\n\r|^\r|", "");
+							System.out.print("(" + i + ")  " + statement + ";");
 							conn.createStatement().executeUpdate(statement);
 							System.out.println(" \u2714");
+							i++;
 						}
 						System.out
 								.println("---------------------@DOWN----------------------------------");
@@ -212,8 +222,8 @@ public class Migrator extends DatabaseImpl {
 		StringWriter writer = new StringWriter();
 		String new_line = System.getProperty("line.separator");
 		if (dbVersion.exists()) {
-			writer.write("Database version is "
-					+ dbVersion.currentVersion() + new_line);
+			writer.write("Database version is " + dbVersion.currentVersion()
+					+ new_line);
 		} else {
 			writer.write("Data versioning is not yet initialized" + new_line);
 		}
