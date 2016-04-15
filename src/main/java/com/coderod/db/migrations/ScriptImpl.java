@@ -66,6 +66,11 @@ public class ScriptImpl implements Script {
 			StringBuffer buffy = new StringBuffer();
 			String line = br.readLine();
 			while (line != null) {
+				if(line.startsWith("--")) {
+					// ignore comments
+					line = br.readLine();
+					continue;
+				}
 				buffy.append(line);
 				line = br.readLine();
 				if (line != null) {

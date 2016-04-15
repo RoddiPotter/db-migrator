@@ -33,6 +33,8 @@ public class ScriptsDirImpl implements ScriptsDir {
 		this.dir = new File(pathToScripts);
 		if(!dir.exists()) {
 			throw new RuntimeException(pathToScripts + " does not exist");
+		} else {
+			System.out.println("Scripts dir --> " + dir.getAbsolutePath());
 		}
 	}
 	
