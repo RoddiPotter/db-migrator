@@ -33,7 +33,7 @@ public class ScriptsTest {
 		ScriptsDir scripts = new ScriptsDirImpl("./src/test/java/com/coderod/db/migrations/");
 		Assert.assertEquals(new File("./src/test/java/com/coderod/db/migrations/"), scripts.dir());
 
-		Assert.assertEquals(5077, scripts.highestVersion());
+		Assert.assertEquals(6000, scripts.highestVersion());
 
 	}
 
@@ -46,7 +46,8 @@ public class ScriptsTest {
 		Script script3 = new ScriptImpl(new File("./src/test/java/com/coderod/db/migrations/10_Change.sql"));
 		Script script4 = new ScriptImpl(new File("./src/test/java/com/coderod/db/migrations/5076_12345_mychange.sql"));
 		Script script5 = new ScriptImpl(new File("./src/test/java/com/coderod/db/migrations/5077-12345-mychange.sql"));
-		Assert.assertEquals(Arrays.asList(script1, script2, script3, script4, script5), scripts.listScripts());
+		Script script6 = new ScriptImpl(new File("./src/test/java/com/coderod/db/migrations/6000_result_returned_when_none_expected.sql"));
+		Assert.assertEquals(Arrays.asList(script1, script2, script3, script4, script5, script6), scripts.listScripts());
 		
 	}
 }

@@ -58,7 +58,7 @@ public class ScriptTest {
 
 		script = new ScriptImpl(new File("./src/test/java/com/coderod/db/migrations/2_Change.sql"));
 		
-		String expected = "-- a test table" + new_line + "CREATE table test("
+		String expected = "CREATE table test("
 				+ new_line + "	test varchar(200) not null, -- a test column \t"
 				+ new_line + ");"
 				+ new_line + 

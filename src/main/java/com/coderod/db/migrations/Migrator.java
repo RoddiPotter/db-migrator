@@ -82,23 +82,18 @@ public class Migrator extends DatabaseImpl {
 								+ dbVersion.currentVersion() + " to "
 								+ script.version() + ":");
 
-						System.out
-								.println("----------------------@UP----------------------------");
-						int i = 0;
+						System.out.println("----------------------@UP----------------------------");
+						int statementNumber = 0;
 						for (String statement : statements) {
-
 							statement = statement.trim();
 							if(statement == null || statement.length() == 0) {
 								continue;
 							}
-							statement = statement.replaceAll("$\n|$\n\r|$\r|^\n|^\n\r|^\r|", "");
-							System.out.print("(" + i + ")   " + statement.replaceAll("\n", "\n      ") + ";");
-							conn.createStatement().executeUpdate(statement);
+							runStatement(conn, statementNumber, statement);
 							System.out.println(" \u2714");
-							i++;
+							statementNumber++;
 						}
-						System.out
-								.println("----------------------@UP----------------------------");
+						System.out.println("----------------------@UP----------------------------");
 
 					}
 					dbVersion.update(script.version());
@@ -106,7 +101,7 @@ public class Migrator extends DatabaseImpl {
 					System.out.println("succeeded, now at " + script.version());
 					return true;
 
-				} catch (SQLException e) {
+				} catch (Exception e) {
 					System.out.print(" \u2718 \u2775 ");
 					System.out.println(e.getMessage());
 					try {
@@ -122,6 +117,12 @@ public class Migrator extends DatabaseImpl {
 		}
 		return false;
 
+	}
+
+	void runStatement(Connection conn, int statementNumber, String statement) throws SQLException {
+		statement = statement.replaceAll("$\n|$\n\r|$\r|^\n|^\n\r|^\r|", "");
+		System.out.print("(" + statementNumber + ")   " + statement.replaceAll("\n", "\n      ") + ";");
+		conn.createStatement().execute(statement);
 	}
 
 	public boolean migrateDown() {
@@ -150,23 +151,18 @@ public class Migrator extends DatabaseImpl {
 								+ dbVersion.currentVersion() + " to "
 								+ script.version());
 
-						System.out
-								.println("---------------------@DOWN-----------------------------");
-						int i = 0;
+						System.out.println("---------------------@DOWN-----------------------------");
+						int statementNumber = 0;
 						for (String statement : statements) {
-
 							statement = statement.trim();
 							if(statement == null || statement.length() == 0) {
 								continue;
 							}
-							statement = statement.replaceAll("$\n|$\n\r|$\r|^\n|^\n\r|^\r|", "");
-							System.out.print("(" + i + ")  " + statement + ";");
-							conn.createStatement().executeUpdate(statement);
+							runStatement(conn, statementNumber, statement);
 							System.out.println(" \u2714");
-							i++;
+							statementNumber++;
 						}
-						System.out
-								.println("---------------------@DOWN----------------------------------");
+						System.out.println("---------------------@DOWN----------------------------------");
 
 					}
 					// now roll back to previous script number, checking to make
@@ -182,7 +178,7 @@ public class Migrator extends DatabaseImpl {
 					System.out.println("succeeded, now at " + script.version());
 					return true;
 
-				} catch (SQLException e) {
+				} catch (Exception e) {
 					System.out.print(" \u2718 \u2775 ");
 					System.out.println(e.getMessage());
 					try {
